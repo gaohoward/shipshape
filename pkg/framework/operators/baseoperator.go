@@ -3,10 +3,13 @@ package operators
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/ghodss/yaml"
 	"github.com/rh-messaging/shipshape/pkg/framework/log"
 	"github.com/rh-messaging/shipshape/pkg/framework/util"
-	"io/ioutil"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -17,8 +20,6 @@ import (
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	"net/http"
-	"strings"
 )
 
 //All the base operator stuff goes into this class. All operator-specific things go into specific classes.
@@ -275,6 +276,7 @@ func (b *BaseOperator) setupServiceAccount(jsonObj []byte) {
 	if _, err := b.kubeClient.CoreV1().ServiceAccounts(b.namespace).Create(&b.serviceAccount); err != nil {
 		b.errorItemCreate("service account", err)
 	}
+	log.Logf("ServiceAccount created: %v", b.serviceAccount)
 
 }
 
@@ -290,6 +292,7 @@ func (b *BaseOperator) setupRole(jsonObj []byte) {
 	if _, err := b.kubeClient.RbacV1().Roles(b.namespace).Create(&b.role); err != nil {
 		b.errorItemCreate("role", err)
 	}
+	log.Logf("Role setup: %v", b.role)
 }
 
 func (b *BaseOperator) setupClusterRole(jsonObj []byte) {
@@ -301,6 +304,7 @@ func (b *BaseOperator) setupClusterRole(jsonObj []byte) {
 	if _, err := b.kubeClient.RbacV1().ClusterRoles().Create(&b.cRole); err != nil {
 		b.errorItemCreate("cluster role", err)
 	}
+	log.Logf("Cluster role: %v", b.cRole)
 }
 
 func (b *BaseOperator) setupRoleBinding(jsonObj []byte) {
@@ -312,6 +316,7 @@ func (b *BaseOperator) setupRoleBinding(jsonObj []byte) {
 	if _, err := b.kubeClient.RbacV1().RoleBindings(b.namespace).Create(&b.roleBinding); err != nil {
 		b.errorItemCreate("role binding", err)
 	}
+	log.Logf("rolebinding: %v", b.roleBinding)
 }
 
 func (b *BaseOperator) setupClusterRoleBinding(jsonObj []byte) {
@@ -335,6 +340,7 @@ func (b *BaseOperator) setupCRD(jsonObj []byte) {
 			b.errorItemCreate("CRD", err)
 		}
 		b.crds = append(b.crds, CRD)
+		log.Logf("Crds setup: %v", b.crds)
 	} else {
 		log.Logf("not setting up CRDs due to configuration flag")
 	}
@@ -398,8 +404,10 @@ func (b *BaseOperator) setupPreparedYamls() error {
 
 func (b *BaseOperator) SetupYamls() error {
 	if b.yamlURLs != nil {
+		log.Logf("Setting up operator frum urls: %v", b.yamlURLs)
 		return b.setupYamlsFromUrls()
 	} else if b.yamls != nil {
+		log.Logf("Setting up operator from parpared yamls: %v", b.yamls)
 		return b.setupPreparedYamls()
 	} else {
 		return fmt.Errorf("yaml definitions were not supplied to operator builder")
@@ -425,6 +433,7 @@ func (b *BaseOperator) setupDeployment(jsonItem []byte) {
 	if _, err := b.kubeClient.AppsV1().Deployments(b.namespace).Create(&b.deploymentConfig); err != nil {
 		b.errorItemCreate("deployment", err)
 	}
+	log.Logf("Deployment to be: %v", b.deploymentConfig)
 }
 
 func (b *BaseOperator) Namespace() string {

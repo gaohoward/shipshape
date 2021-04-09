@@ -16,9 +16,10 @@ package framework
 
 import (
 	"context"
+	"time"
+
 	"github.com/onsi/gomega"
 	"github.com/rh-messaging/shipshape/pkg/framework/log"
-	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -52,7 +53,6 @@ func (c *ContextData) ListPodsForDeployment(deployment *appsv1.Deployment) (*cor
 	listOps := metav1.ListOptions{LabelSelector: selector.String()}
 	return c.Clients.KubeClient.CoreV1().Pods(c.Namespace).List(listOps)
 }
-
 
 func WaitForStatefulSet(kubeclient kubernetes.Interface, namespace, name string, count int, retryInterval, timeout time.Duration) error {
 	err := wait.Poll(retryInterval, timeout, func() (done bool, err error) {

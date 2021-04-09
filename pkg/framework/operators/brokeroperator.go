@@ -60,7 +60,7 @@ func (b *BrokerOperator) Namespace() string {
 }
 
 func (b *BrokerOperator) Setup() error {
-	log.Logf("Setting up from YAMLs")
+	log.Logf("broker operator: Setting up from YAMLs")
 	if err := b.SetupYamls(); err != nil {
 		return err
 	}

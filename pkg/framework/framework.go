@@ -16,12 +16,13 @@ package framework
 
 import (
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/rh-messaging/shipshape/pkg/framework/events"
 	"github.com/rh-messaging/shipshape/pkg/framework/log"
 	"github.com/rh-messaging/shipshape/pkg/framework/operators"
 	"k8s.io/client-go/rest"
-	"strings"
-	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -174,6 +175,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 	// 3 - Generate the clients for given context
 
 	ginkgo.By("Creating kubernetes clients")
+	log.Logf("Loading config from file", "cfg", TestContext.KubeConfig)
 	config, err := clientcmd.LoadFromFile(TestContext.KubeConfig)
 	//if err != nil || config == nil {
 	//	fmt.Sprintf("Unable to retrieve config from %s - %s", TestContext.KubeConfig, err))
@@ -186,8 +188,10 @@ func (f *Framework) BeforeEach(contexts ...string) {
 
 	// Loop through provided contexts (or use current-context)
 	// and loading all context info
+	log.Logf("Total contexts", "len", len(contexts))
 	for _, context := range contexts {
 
+		log.Logf("Processing context", "context", context)
 		// Populating ContextMap with clients for each provided context
 		var clients ClientSet
 
@@ -233,6 +237,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 			if !f.IsOpenshift {
 				log.Logf("Setting up namespace")
 				namespace = generateNamespace(kubeClient, f.BaseName, namespaceLabels)
+				log.Logf("namespace set up", "namespace", namespace)
 			} else {
 				log.Logf("Setting up project")
 				project = generateProject(projectClient, f.BaseName, namespaceLabels)
@@ -290,6 +295,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 		}
 
 		// Initializing needed operators on given context
+		log.Logf("Setting up operator map")
 		ctx.OperatorMap = map[operators.OperatorType]operators.OperatorSetup{}
 		if f.builders == nil || len(f.builders) == 0 {
 			// populate builders with default values
@@ -297,7 +303,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 				f.builders = append(f.builders, builder)
 			}
 		} else {
-			log.Logf("CUSTOM BUILDERS PROVIDED")
+			log.Logf("CUSTOM BUILDERS PROVIDED", "len", len(f.builders))
 		}
 		for _, builder := range f.builders {
 			builder.NewBuilder(restConfig, &rawConfig)
@@ -318,6 +324,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 	}
 
 	// setup the operators
+	log.Logf("Now setup the operator...")
 	err = f.Setup()
 	if err != nil {
 		f.AfterEach()
@@ -438,6 +445,19 @@ func (f *Framework) Setup() error {
 			}
 			err = WaitForDeployment(ctxData.Clients.KubeClient, ctxData.Namespace, operator.Name(), 1, RetryInterval, Timeout)
 			if err != nil {
+				e2elog.Logf("tring to get pod logs for opr %v", operator.Name())
+				oprPodName, oprErr := ctxData.GetPodName(operator.Name())
+				if oprErr == nil {
+					e2elog.Logf("Got operator pod name %v", oprPodName)
+					oprLog, oprErr := ctxData.GetLogs(oprPodName)
+					if oprErr == nil {
+						fmt.Printf("Operator log: %s", oprLog)
+					} else {
+						fmt.Printf("Got err: %v", oprErr)
+					}
+				} else {
+					e2elog.Logf("Failed to get pod log %v", oprErr)
+				}
 				return fmt.Errorf("failed to wait for %s: %v", operator.Name(), err)
 			}
 		}
