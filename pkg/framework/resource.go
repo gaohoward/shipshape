@@ -3,7 +3,7 @@ package framework
 import (
 	"encoding/json"
 	"github.com/ghodss/yaml"
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
 	"io/ioutil"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"

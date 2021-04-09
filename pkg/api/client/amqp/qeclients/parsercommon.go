@@ -5,7 +5,7 @@ package qeclients
 //
 
 import (
-	"github.com/rh-messaging/shipshape/pkg/api/client/amqp/qeclients/argparser/java"
+	"github.com/gaohoward/shipshape/pkg/api/client/amqp/qeclients/argparser/java"
 	"strconv"
 )
 

@@ -2,8 +2,8 @@ package qdrmanagement
 
 import (
 	"encoding/json"
-	entities "github.com/rh-messaging/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities"
-	"github.com/rh-messaging/shipshape/pkg/framework"
+	entities "github.com/gaohoward/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities"
+	"github.com/gaohoward/shipshape/pkg/framework"
 	"reflect"
 	"time"
 )

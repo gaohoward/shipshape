@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/onsi/gomega"
-	"github.com/rh-messaging/shipshape/pkg/api/client/amqp"
+	"github.com/gaohoward/shipshape/pkg/api/client/amqp"
 	"io"
 	v1 "k8s.io/api/core/v1"
 )

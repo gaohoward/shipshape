@@ -2,7 +2,7 @@ package validation
 
 import (
 	"github.com/onsi/gomega"
-	"github.com/rh-messaging/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities"
+	"github.com/gaohoward/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities"
 	"reflect"
 )
 

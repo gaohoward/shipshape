@@ -1,4 +1,4 @@
-module github.com/rh-messaging/shipshape
+module github.com/gaohoward/shipshape
 
 require (
 	dmitri.shuralyov.com/gpu/mtl v0.0.0-20191203043605-d42048ed14fd // indirect

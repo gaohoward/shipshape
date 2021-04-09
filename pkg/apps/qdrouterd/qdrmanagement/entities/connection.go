@@ -2,7 +2,7 @@ package entities
 
 import (
 	"encoding/json"
-	"github.com/rh-messaging/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities/common"
+	"github.com/gaohoward/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities/common"
 	"strconv"
 	"strings"
 )

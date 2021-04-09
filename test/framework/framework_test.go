@@ -3,8 +3,8 @@ package framework_test
 import (
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
-	"github.com/rh-messaging/shipshape/test/framework"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/test/framework"
 )
 
 var _ = Describe("Framework", func() {

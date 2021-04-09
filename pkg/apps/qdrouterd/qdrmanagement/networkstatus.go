@@ -3,8 +3,8 @@ package qdrmanagement
 import (
 	"context"
 	"github.com/interconnectedcloud/qdr-operator/pkg/apis/interconnectedcloud/v1alpha1"
-	entities2 "github.com/rh-messaging/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities"
-	"github.com/rh-messaging/shipshape/pkg/framework"
+	entities2 "github.com/gaohoward/shipshape/pkg/apps/qdrouterd/qdrmanagement/entities"
+	"github.com/gaohoward/shipshape/pkg/framework"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"time"

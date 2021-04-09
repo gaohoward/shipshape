@@ -1,8 +1,8 @@
 package skupper
 
 import (
-	"github.com/rh-messaging/shipshape/pkg/framework"
-	"github.com/rh-messaging/shipshape/pkg/framework/operators"
+	"github.com/gaohoward/shipshape/pkg/framework"
+	"github.com/gaohoward/shipshape/pkg/framework/operators"
 )
 
 type Skupper struct {

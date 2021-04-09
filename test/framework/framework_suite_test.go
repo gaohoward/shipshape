@@ -1,7 +1,7 @@
 package framework_test
 
 import (
-	"github.com/rh-messaging/shipshape/test"
+	"github.com/gaohoward/shipshape/test"
 	"testing"
 )
 

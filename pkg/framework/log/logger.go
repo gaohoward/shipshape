@@ -18,7 +18,7 @@ package log
 
 import (
 	"fmt"
-	ginkgowrapper2 "github.com/rh-messaging/shipshape/pkg/framework/ginkgowrapper"
+	ginkgowrapper2 "github.com/gaohoward/shipshape/pkg/framework/ginkgowrapper"
 	"time"
 
 	"github.com/onsi/ginkgo"

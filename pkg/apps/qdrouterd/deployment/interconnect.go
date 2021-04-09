@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"github.com/interconnectedcloud/qdr-operator/pkg/apis/interconnectedcloud/v1alpha1"
 	qdrclient "github.com/interconnectedcloud/qdr-operator/pkg/client/clientset/versioned"
-	"github.com/rh-messaging/shipshape/pkg/framework"
-	"github.com/rh-messaging/shipshape/pkg/framework/operators"
+	"github.com/gaohoward/shipshape/pkg/framework"
+	"github.com/gaohoward/shipshape/pkg/framework/operators"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

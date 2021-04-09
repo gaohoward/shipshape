@@ -1,8 +1,8 @@
 package qeclients
 
 import (
-	"github.com/rh-messaging/shipshape/pkg/api/client/amqp"
-	"github.com/rh-messaging/shipshape/pkg/framework"
+	"github.com/gaohoward/shipshape/pkg/api/client/amqp"
+	"github.com/gaohoward/shipshape/pkg/framework"
 	"sync"
 )
 

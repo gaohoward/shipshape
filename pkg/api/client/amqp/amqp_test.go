@@ -3,8 +3,8 @@ package amqp_test
 import (
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
-	"github.com/rh-messaging/shipshape/pkg/api/client/amqp"
-	"github.com/rh-messaging/shipshape/pkg/framework"
+	"github.com/gaohoward/shipshape/pkg/api/client/amqp"
+	"github.com/gaohoward/shipshape/pkg/framework"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/fake"

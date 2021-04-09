@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/ghodss/yaml"
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
-	"github.com/rh-messaging/shipshape/pkg/framework/util"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/pkg/framework/util"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"

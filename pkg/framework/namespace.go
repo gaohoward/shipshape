@@ -17,8 +17,8 @@ package framework
 import (
 	"fmt"
 	projectv1 "github.com/openshift/client-go/project/clientset/versioned"
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
-	"github.com/rh-messaging/shipshape/pkg/framework/util"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/pkg/framework/util"
 	"strings"
 	"sync"
 	"time"

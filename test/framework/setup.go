@@ -2,7 +2,7 @@ package framework
 
 import (
 	"github.com/onsi/ginkgo"
-	"github.com/rh-messaging/shipshape/pkg/framework"
+	"github.com/gaohoward/shipshape/pkg/framework"
 	"os"
 )
 

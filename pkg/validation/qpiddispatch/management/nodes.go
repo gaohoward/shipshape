@@ -2,8 +2,8 @@ package management
 
 import (
 	"github.com/onsi/gomega"
-	"github.com/rh-messaging/shipshape/pkg/apps/qdrouterd/qdrmanagement"
-	"github.com/rh-messaging/shipshape/pkg/framework"
+	"github.com/gaohoward/shipshape/pkg/apps/qdrouterd/qdrmanagement"
+	"github.com/gaohoward/shipshape/pkg/framework"
 )
 
 // ValidateRoutersInNetwork uses qdmanage query to retrieve nodes in the router network.

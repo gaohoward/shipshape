@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/onsi/gomega"
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"

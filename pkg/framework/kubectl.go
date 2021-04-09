@@ -19,7 +19,7 @@ package framework
 import (
 	"bytes"
 	"fmt"
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
 	"net"
 	"net/url"
 	"os/exec"

@@ -19,9 +19,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rh-messaging/shipshape/pkg/framework/events"
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
-	"github.com/rh-messaging/shipshape/pkg/framework/operators"
+	"github.com/gaohoward/shipshape/pkg/framework/events"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/pkg/framework/operators"
 	"k8s.io/client-go/rest"
 
 	corev1 "k8s.io/api/core/v1"
@@ -33,7 +33,7 @@ import (
 	routev1 "github.com/openshift/client-go/route/clientset/versioned"
 
 	openapiv1 "github.com/openshift/api/project/v1"
-	e2elog "github.com/rh-messaging/shipshape/pkg/framework/log"
+	e2elog "github.com/gaohoward/shipshape/pkg/framework/log"
 	apiextension "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	"k8s.io/client-go/dynamic"
 	kubeinformers "k8s.io/client-go/informers"

@@ -1,7 +1,7 @@
 package events
 
 import (
-	"github.com/rh-messaging/shipshape/pkg/framework/log"
+	"github.com/gaohoward/shipshape/pkg/framework/log"
 	kubeinformers "k8s.io/client-go/informers"
 	appsv1 "k8s.io/client-go/informers/apps/v1"
 	corev1 "k8s.io/client-go/informers/core/v1"

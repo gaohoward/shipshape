@@ -3,8 +3,8 @@ package test
 import (
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
-	"github.com/rh-messaging/shipshape/pkg/framework"
-	"github.com/rh-messaging/shipshape/pkg/framework/ginkgowrapper"
+	"github.com/gaohoward/shipshape/pkg/framework"
+	"github.com/gaohoward/shipshape/pkg/framework/ginkgowrapper"
 	"os"
 	"testing"
 )
