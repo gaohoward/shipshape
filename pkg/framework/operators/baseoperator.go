@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ghodss/yaml"
 	"github.com/gaohoward/shipshape/pkg/framework/log"
 	"github.com/gaohoward/shipshape/pkg/framework/util"
+	"github.com/ghodss/yaml"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -238,18 +238,18 @@ func (b *BaseOperator) InitFromBaseOperatorBuilder(builder *BaseOperatorBuilder)
 func (b *BaseOperator) loadJson(url string) ([]byte, error) {
 	resp, err := http.Get(url) //load yamls body from url
 	if err != nil {
-		log.Logf("error during loading %s: %v", url, err)
+		log.Logf("[DEBUG]error during loading %s: %v", url, err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Logf("error during loading %s: %v", url, err)
+		log.Logf("[DEBUG]error during loading %s: %v", url, err)
 		return nil, err
 	}
 	jsonBody, err := yaml.YAMLToJSON(body)
 	if err != nil {
-		log.Logf("error during parsing %s: %v", url, err)
+		log.Logf("[DEBUG]error during parsing %s: %v", url, err)
 		return nil, err
 	}
 	return jsonBody, nil
@@ -269,30 +269,30 @@ func (b *BaseOperator) errorItemCreate(failedType string, parentError error) {
 }
 
 func (b *BaseOperator) setupServiceAccount(jsonObj []byte) {
-	log.Logf("setting up service account (ns: %s)", b.namespace)
+	log.Logf("[DEBUG]setting up service account (ns: %s)", b.namespace)
 	if err := json.Unmarshal(jsonObj, &b.serviceAccount); err != nil {
 		b.errorItemLoad("service account", jsonObj, err)
 	}
 	if _, err := b.kubeClient.CoreV1().ServiceAccounts(b.namespace).Create(&b.serviceAccount); err != nil {
 		b.errorItemCreate("service account", err)
 	}
-	log.Logf("ServiceAccount created: %v", b.serviceAccount)
+	log.Logf("[DEBUG]ServiceAccount created: %v", b.serviceAccount)
 
 }
 
 func (b *BaseOperator) setupRole(jsonObj []byte) {
-	log.Logf("Setting up Role")
+	log.Logf("[DEBUG]Setting up Role")
 
 	if err := json.Unmarshal(jsonObj, &b.role); err != nil {
 		b.errorItemLoad("role", jsonObj, err)
 	}
 	for _, item := range b.role.Rules {
-		log.Logf("Rule concerning %v is being created", item.Resources)
+		log.Logf("[DEBUG]Rule concerning %v is being created", item.Resources)
 	}
 	if _, err := b.kubeClient.RbacV1().Roles(b.namespace).Create(&b.role); err != nil {
 		b.errorItemCreate("role", err)
 	}
-	log.Logf("Role setup: %v", b.role)
+	log.Logf("[DEBUG]Role setup: %v", b.role)
 }
 
 func (b *BaseOperator) setupClusterRole(jsonObj []byte) {
@@ -304,11 +304,11 @@ func (b *BaseOperator) setupClusterRole(jsonObj []byte) {
 	if _, err := b.kubeClient.RbacV1().ClusterRoles().Create(&b.cRole); err != nil {
 		b.errorItemCreate("cluster role", err)
 	}
-	log.Logf("Cluster role: %v", b.cRole)
+	log.Logf("[DEBUG]Cluster role: %v", b.cRole)
 }
 
 func (b *BaseOperator) setupRoleBinding(jsonObj []byte) {
-	log.Logf("Setting up Role Binding")
+	log.Logf("[DEBUG]Setting up Role Binding")
 	if err := json.Unmarshal(jsonObj, &b.roleBinding); err != nil {
 		b.errorItemLoad("role binding", jsonObj, err)
 	}
@@ -316,11 +316,11 @@ func (b *BaseOperator) setupRoleBinding(jsonObj []byte) {
 	if _, err := b.kubeClient.RbacV1().RoleBindings(b.namespace).Create(&b.roleBinding); err != nil {
 		b.errorItemCreate("role binding", err)
 	}
-	log.Logf("rolebinding: %v", b.roleBinding)
+	log.Logf("[DEBUG]rolebinding: %v", b.roleBinding)
 }
 
 func (b *BaseOperator) setupClusterRoleBinding(jsonObj []byte) {
-	log.Logf("Setting up Cluster Role Binding")
+	log.Logf("[DEBUG]Setting up Cluster Role Binding")
 	if err := json.Unmarshal(jsonObj, &b.cRoleBinding); err != nil {
 		b.errorItemLoad("cluster role binding", jsonObj, err)
 	}
@@ -331,7 +331,7 @@ func (b *BaseOperator) setupClusterRoleBinding(jsonObj []byte) {
 
 func (b *BaseOperator) setupCRD(jsonObj []byte) {
 	if !b.crdsPrepared {
-		log.Logf("Setting up CRD")
+		log.Logf("[DEBUG]Setting up CRD")
 		var CRD apiextv1b1.CustomResourceDefinition
 		if err := json.Unmarshal(jsonObj, &CRD); err != nil {
 			b.errorItemLoad("CRD", jsonObj, err)
@@ -340,9 +340,9 @@ func (b *BaseOperator) setupCRD(jsonObj []byte) {
 			b.errorItemCreate("CRD", err)
 		}
 		b.crds = append(b.crds, CRD)
-		log.Logf("Crds setup: %v", b.crds)
+		log.Logf("[DEBUG]Crds setup: %v", b.crds)
 	} else {
-		log.Logf("not setting up CRDs due to configuration flag")
+		log.Logf("[DEBUG]not setting up CRDs due to configuration flag")
 	}
 }
 
@@ -404,10 +404,10 @@ func (b *BaseOperator) setupPreparedYamls() error {
 
 func (b *BaseOperator) SetupYamls() error {
 	if b.yamlURLs != nil {
-		log.Logf("Setting up operator frum urls: %v", b.yamlURLs)
+		log.Logf("[DEBUG]Setting up operator frum urls: %v", b.yamlURLs)
 		return b.setupYamlsFromUrls()
 	} else if b.yamls != nil {
-		log.Logf("Setting up operator from parpared yamls: %v", b.yamls)
+		log.Logf("[DEBUG]Setting up operator from parpared yamls: %v", b.yamls)
 		return b.setupPreparedYamls()
 	} else {
 		return fmt.Errorf("yaml definitions were not supplied to operator builder")
@@ -415,7 +415,7 @@ func (b *BaseOperator) SetupYamls() error {
 }
 
 func (b *BaseOperator) setupDeployment(jsonItem []byte) {
-	log.Logf("Setting up Deployment")
+	log.Logf("[DEBUG]Setting up Deployment")
 	if err := json.Unmarshal(jsonItem, &b.deploymentConfig); err != nil {
 		b.errorItemLoad("deployment", jsonItem, err)
 	}
@@ -433,7 +433,7 @@ func (b *BaseOperator) setupDeployment(jsonItem []byte) {
 	if _, err := b.kubeClient.AppsV1().Deployments(b.namespace).Create(&b.deploymentConfig); err != nil {
 		b.errorItemCreate("deployment", err)
 	}
-	log.Logf("Deployment to be: %v", b.deploymentConfig)
+	log.Logf("[DEBUG]Deployment to be: %v", b.deploymentConfig)
 }
 
 func (b *BaseOperator) Namespace() string {
@@ -499,7 +499,7 @@ func (b *BaseOperator) TeardownEach() error {
 		if err != nil && !apierrors.IsNotFound(err) {
 			return err
 		}
-		log.Logf("%s teradown namespace succesful", b.namespace)
+		log.Logf("[DEBUG]%s teradown namespace succesful", b.namespace)
 		return nil
 	}
 }

@@ -32,8 +32,8 @@ import (
 	projectv1 "github.com/openshift/client-go/project/clientset/versioned"
 	routev1 "github.com/openshift/client-go/route/clientset/versioned"
 
-	openapiv1 "github.com/openshift/api/project/v1"
 	e2elog "github.com/gaohoward/shipshape/pkg/framework/log"
+	openapiv1 "github.com/openshift/api/project/v1"
 	apiextension "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	"k8s.io/client-go/dynamic"
 	kubeinformers "k8s.io/client-go/informers"
@@ -175,7 +175,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 	// 3 - Generate the clients for given context
 
 	ginkgo.By("Creating kubernetes clients")
-	log.Logf("Loading config from file", "cfg", TestContext.KubeConfig)
+	log.Logf("[DEBUG]Loading config from file", "cfg", TestContext.KubeConfig)
 	config, err := clientcmd.LoadFromFile(TestContext.KubeConfig)
 	//if err != nil || config == nil {
 	//	fmt.Sprintf("Unable to retrieve config from %s - %s", TestContext.KubeConfig, err))
@@ -188,10 +188,10 @@ func (f *Framework) BeforeEach(contexts ...string) {
 
 	// Loop through provided contexts (or use current-context)
 	// and loading all context info
-	log.Logf("Total contexts", "len", len(contexts))
+	log.Logf("[DEBUG]Total contexts", "len", len(contexts))
 	for _, context := range contexts {
 
-		log.Logf("Processing context", "context", context)
+		log.Logf("[DEBUG]Processing context", "context", context)
 		// Populating ContextMap with clients for each provided context
 		var clients ClientSet
 
@@ -235,11 +235,11 @@ func (f *Framework) BeforeEach(contexts ...string) {
 		var project *openapiv1.Project
 		if !f.SkipNamespaceCreation {
 			if !f.IsOpenshift {
-				log.Logf("Setting up namespace")
+				log.Logf("[DEBUG]Setting up namespace")
 				namespace = generateNamespace(kubeClient, f.BaseName, namespaceLabels)
-				log.Logf("namespace set up", "namespace", namespace)
+				log.Logf("[DEBUG]namespace set up", "namespace", namespace)
 			} else {
-				log.Logf("Setting up project")
+				log.Logf("[DEBUG]Setting up project")
 				project = generateProject(projectClient, f.BaseName, namespaceLabels)
 			}
 		} else {
@@ -295,7 +295,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 		}
 
 		// Initializing needed operators on given context
-		log.Logf("Setting up operator map")
+		log.Logf("[DEBUG]Setting up operator map")
 		ctx.OperatorMap = map[operators.OperatorType]operators.OperatorSetup{}
 		if f.builders == nil || len(f.builders) == 0 {
 			// populate builders with default values
@@ -303,7 +303,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 				f.builders = append(f.builders, builder)
 			}
 		} else {
-			log.Logf("CUSTOM BUILDERS PROVIDED", "len", len(f.builders))
+			log.Logf("[DEBUG]CUSTOM BUILDERS PROVIDED", "len", len(f.builders))
 		}
 		for _, builder := range f.builders {
 			builder.NewBuilder(restConfig, &rawConfig)
@@ -324,7 +324,7 @@ func (f *Framework) BeforeEach(contexts ...string) {
 	}
 
 	// setup the operators
-	log.Logf("Now setup the operator...")
+	log.Logf("[DEBUG]Now setup the operator...")
 	err = f.Setup()
 	if err != nil {
 		f.AfterEach()
@@ -412,7 +412,7 @@ func (f *Framework) TeardownEach() error {
 			if err != nil && !apierrors.IsNotFound(err) {
 				return fmt.Errorf("failed to teardown [each] operator [%s]: %v", operator.Name(), err)
 			}
-			log.Logf("%s teardown namespace [%s] successful", operator.Name(), contextData.Namespace)
+			log.Logf("[DEBUG]%s teardown namespace [%s] successful", operator.Name(), contextData.Namespace)
 		}
 	}
 
@@ -428,7 +428,7 @@ func (f *Framework) TeardownSuite() error {
 			if err != nil && !apierrors.IsNotFound(err) {
 				return fmt.Errorf("failed to delete operator [%s] from namespace [%s]: %v", operator.Name(), contextData.Namespace, err)
 			}
-			log.Logf("%s teardown suite successful on %s", operator.Name(), contextData.Namespace)
+			log.Logf("[DEBUG]%s teardown suite successful on %s", operator.Name(), contextData.Namespace)
 		}
 	}
 
@@ -436,6 +436,8 @@ func (f *Framework) TeardownSuite() error {
 }
 
 func (f *Framework) Setup() error {
+
+	log.Logf("[DEBUG] Framework.Setup")
 
 	for _, ctxData := range f.ContextMap {
 		for _, operator := range ctxData.OperatorMap {
@@ -445,18 +447,18 @@ func (f *Framework) Setup() error {
 			}
 			err = WaitForDeployment(ctxData.Clients.KubeClient, ctxData.Namespace, operator.Name(), 1, RetryInterval, Timeout)
 			if err != nil {
-				e2elog.Logf("tring to get pod logs for opr %v", operator.Name())
+				log.Logf("[DEBUG]tring to get pod logs for opr %v", operator.Name())
 				oprPodName, oprErr := ctxData.GetPodName(operator.Name())
 				if oprErr == nil {
-					e2elog.Logf("Got operator pod name %v", oprPodName)
+					log.Logf("[DEBUG]Got operator pod name %v", oprPodName)
 					oprLog, oprErr := ctxData.GetLogs(oprPodName)
 					if oprErr == nil {
-						fmt.Printf("Operator log: %s", oprLog)
+						log.Logf("Operator log: %s", oprLog)
 					} else {
-						fmt.Printf("Got err: %v", oprErr)
+						log.Logf("Got err: %v", oprErr)
 					}
 				} else {
-					e2elog.Logf("Failed to get pod log %v", oprErr)
+					log.Logf("[DEBUG]Failed to get pod log %v", oprErr)
 				}
 				return fmt.Errorf("failed to wait for %s: %v", operator.Name(), err)
 			}
@@ -489,14 +491,14 @@ func (c *ContextData) IsOpenShift() bool {
 
 	for _, v := range apiList.Groups {
 		if v.Name == "route.openshift.io" {
-			e2elog.Logf("OpenShift route detected in api groups, returning true")
+			e2elog.Logf("[DEBUG]OpenShift route detected in api groups, returning true")
 			result = true
 			c.isOpenShift = &result
 			return result
 		}
 	}
 
-	e2elog.Logf("OpenShift route not found in groups, returning false")
+	e2elog.Logf("[DEBUG]OpenShift route not found in groups, returning false")
 	result = false
 	c.isOpenShift = &result
 	return result
