@@ -457,6 +457,15 @@ func (f *Framework) Setup() error {
 					} else {
 						log.Logf("Got err: %v", oprErr)
 					}
+					opts := metav1.ListOptions{}
+					events, errr := ctxData.Clients.KubeClient.CoreV1().Events(ctxData.Namespace).List(opts)
+					if errr == nil {
+						for _, evt := range events.Items {
+							log.Logf("[DEBUG]", "event", evt)
+						}
+					} else {
+						log.Logf("[DEBUG]error getting events", "err", errr)
+					}
 				} else {
 					log.Logf("[DEBUG]Failed to get pod log %v", oprErr)
 				}
